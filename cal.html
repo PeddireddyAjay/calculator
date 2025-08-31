@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modern Calculator</title>
+  <style>
+    :root {
+      --bg: #e0e5ec;
+      --shadow: #a3b1c6;
+      --light: #ffffff;
+      --dark: #babecc;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      background: var(--bg);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow),
+                  -10px -10px 20px var(--light);
+      width: 320px;
+    }
+
+    .screen {
+      background: var(--bg);
+      box-shadow: inset 5px 5px 10px var(--shadow),
+                  inset -5px -5px 10px var(--light);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: right;
+    }
+
+    .expression {
+      font-size: 1rem;
+      color: #666;
+      min-height: 20px;
+    }
+
+    .result {
+      font-size: 2rem;
+      color: #333;
+      min-height: 30px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.2em;
+      background: var(--bg);
+      border: none;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px var(--shadow),
+                  -5px -5px 10px var(--light);
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    button:hover {
+      box-shadow: inset 5px 5px 10px var(--shadow),
+                  inset -5px -5px 10px var(--light);
+    }
+
+    button.equal {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    button.clear {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    @media (max-width: 400px) {
+      .calculator {
+        width: 90%;
+      }
+
+      button {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div class="screen">
+      <div class="expression" id="expression"></div>
+      <div class="result" id="result">0</div>
+    </div>
+    <div class="buttons">
+      <button onclick="clearAll()" class="clear">C</button>
+      <button onclick="append('/')">÷</button>
+      <button onclick="append('*')">×</button>
+      <button onclick="backspace()">⌫</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('-')">−</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="calculate()" class="equal">=</button>
+
+      <button onclick="append('0')" style="grid-column: span 2;">0</button>
+      <button onclick="append('.')">.</button>
+    </div>
+  </div>
+
+  <script>
+    let expression = '';
+    const exprDisplay = document.getElementById('expression');
+    const resultDisplay = document.getElementById('result');
+
+    function append(val) {
+      expression += val;
+      exprDisplay.innerText = expression;
+    }
+
+    function clearAll() {
+      expression = '';
+      exprDisplay.innerText = '';
+      resultDisplay.innerText = '0';
+    }
+
+    function backspace() {
+      expression = expression.slice(0, -1);
+      exprDisplay.innerText = expression;
+    }
+
+    function calculate() {
+      try {
+        const result = eval(expression);
+        resultDisplay.innerText = result;
+      } catch {
+        resultDisplay.innerText = 'Error';
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      const key = e.key;
+
+      if (/[\d+\-*/.]/.test(key)) {
+        append(key);
+      } else if (key === 'Enter') {
+        e.preventDefault();
+        calculate();
+      } else if (key === 'Backspace') {
+        backspace();
+      } else if (key === 'Escape') {
+        clearAll();
+      }
+    });
+  </script>
+
+</body>
+</html>
